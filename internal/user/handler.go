@@ -2,6 +2,7 @@ package user
 
 import (
 	"ServerApi/internal/handlers"
+	"ServerApi/pkg/logging"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 )
@@ -12,10 +13,13 @@ const (
 )
 
 type handler struct {
+	logger logging.Logger
 }
 
-func NewHandler() handlers.Handler {
-	return &handler{}
+func NewHandler(logger logging.Logger) handlers.Handler {
+	return &handler{
+		logger: logger,
+	}
 }
 
 func (h *handler) Register(router *httprouter.Router) {
@@ -29,6 +33,7 @@ func (h *handler) Register(router *httprouter.Router) {
 }
 
 func (h *handler) GetList(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+
 	w.Write([]byte("this is page of users"))
 }
 func (h *handler) CreateUser(w http.ResponseWriter, r *http.Request, params httprouter.Params) {

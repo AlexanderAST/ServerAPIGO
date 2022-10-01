@@ -2,6 +2,7 @@ package main
 
 import (
 	"ServerApi/internal/user"
+	"ServerApi/pkg/logging"
 	"github.com/julienschmidt/httprouter"
 	"log"
 	"net"
@@ -10,17 +11,19 @@ import (
 )
 
 func main() {
-	log.Println("create router")
+	logger := logging.GetLogger()
+	logger.Info("create router")
 	router := httprouter.New()
-	log.Println("create router handler")
-	handler := user.NewHandler()
+	logger.Info("create router handler")
+	handler := user.NewHandler(logger)
 	handler.Register(router)
 
 	start(router)
 
 }
 func start(router *httprouter.Router) {
-	log.Println("start application")
+	logger := logging.GetLogger()
+	logger.Info("start application")
 	listener, err := net.Listen("tcp", "127.0.0.1:8080")
 	if err != nil {
 		log.Fatal(err)
@@ -30,6 +33,6 @@ func start(router *httprouter.Router) {
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}
-	log.Println("server listening port 8080")
-	log.Fatal(server.Serve(listener))
+	logger.Info("server listening port 8080")
+	logger.Fatal(server.Serve(listener))
 }
