@@ -1,0 +1,8 @@
+time="2022-10-02T18:54:24+03:00" level=info msg="create router" func="main.main()" file="app.go:19"
+time="2022-10-02T18:54:24+03:00" level=info msg="read application configuration" func="ServerApi/internal/config.GetConfig.func1()" file="config.go:24"
+time="2022-10-02T18:54:24+03:00" level=info msg="create router handler" func="main.main()" file="app.go:24"
+time="2022-10-02T18:54:24+03:00" level=info msg="start application" func="main.start()" file="app.go:32"
+time="2022-10-02T18:54:24+03:00" level=info msg="create socket" func="main.start()" file="app.go:40"
+time="2022-10-02T18:54:24+03:00" level=debug msg="socket path: E:\\ServerApi\\build/app.sock" func="main.start()" file="app.go:42"
+time="2022-10-02T18:54:24+03:00" level=info msg="create unix socket " func="main.start()" file="app.go:44"
+time="2022-10-02T18:54:24+03:00" level=info msg="server listening port E:\\ServerApi\\build/app.sock" func="main.start()" file="app.go:47"
