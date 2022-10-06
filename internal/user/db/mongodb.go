@@ -1,6 +1,7 @@
 package db
 
 import (
+	"ServerApi/internal/apperror"
 	"ServerApi/internal/user"
 	"ServerApi/pkg/logging"
 	"context"
@@ -30,7 +31,19 @@ func (d *db) Create(ctx context.Context, user user.User) (string, error) {
 	d.logger.Trace(user)
 	return "", fmt.Errorf("failed to convert objectid to hex, oid %s ", oid)
 }
+func (d *db) FindAll(ctx context.Context) (u []user.User, err error) {
 
+	cursor, err := d.collection.Find(ctx, bson.M{})
+	if cursor.Err() != nil {
+
+		return u, fmt.Errorf("failed to find all users due to error %v", err)
+	}
+	if err = cursor.All(ctx, &u); err != nil {
+		return u, fmt.Errorf("failed to read all documents %v", err)
+	}
+
+	return u, nil
+}
 func (d *db) FindOne(ctx context.Context, id string) (u user.User, err error) {
 	oid, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -41,7 +54,7 @@ func (d *db) FindOne(ctx context.Context, id string) (u user.User, err error) {
 	if result.Err() != nil {
 		if errors.Is(result.Err(), mongo.ErrNoDocuments) {
 			// Todo errEnt
-			return u, fmt.Errorf("ErrEntityNotFound")
+			return u, apperror.ErrNotFound
 		}
 		return u, fmt.Errorf("failed to find one user by id %s due to error %v", id, err)
 	}
@@ -75,7 +88,7 @@ func (d *db) Update(ctx context.Context, user user.User) error {
 		return fmt.Errorf("failed to execute update user query error %v", err)
 	}
 	if result.MatchedCount == 0 {
-		return fmt.Errorf("not found")
+		return apperror.ErrNotFound
 	}
 	d.logger.Tracef("matched %d,document and modifued %d doc", result.MatchedCount, result.ModifiedCount)
 	return nil
@@ -93,7 +106,7 @@ func (d *db) Delete(ctx context.Context, id string) error {
 		return fmt.Errorf("failed to execute querty %v", err)
 	}
 	if result.DeletedCount == 0 {
-		return fmt.Errorf("not found")
+		return apperror.ErrNotFound
 	}
 	d.logger.Tracef("deleted %d,document", result.DeletedCount)
 	return nil

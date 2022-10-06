@@ -3,10 +3,7 @@ package main
 import (
 	"ServerApi/internal/config"
 	"ServerApi/internal/user"
-	"ServerApi/internal/user/db"
-	"ServerApi/pkg/client/mongodb"
 	"ServerApi/pkg/logging"
-	"context"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"net"
@@ -23,32 +20,13 @@ func main() {
 	router := httprouter.New()
 
 	cfg := config.GetConfig()
-	cfgMongo := cfg.MongoDB
-	mongoDBClient, err := mongodb.NewClient(context.Background(), cfgMongo.Host, cfgMongo.Port, cfgMongo.Username, cfgMongo.Password, cfgMongo.Database, cfgMongo.AuthDB)
-	if err != nil {
-		panic(err)
-	}
-
-	storage := db.NewStorage(mongoDBClient, cfg.MongoDB.Collection, logger)
-	user1 := user.User{
-		ID:           "",
-		Email:        "mymail@example.com",
-		Username:     "Zolafarre",
-		PasswordHash: "143311",
-	}
-	user1ID, err := storage.Create(context.Background(), user1)
-	logger.Info(user1ID)
-	user2 := user.User{
-		ID:           "",
-		Email:        "koding00@bk.ru",
-		Username:     "Alexander Astakhov",
-		PasswordHash: "1355842428437525",
-	}
-	user2ID, err := storage.Create(context.Background(), user2)
-	if err != nil {
-		panic(err)
-	}
-	logger.Info(user2ID)
+	//cfgMongo := cfg.MongoDB
+	//mongoDBClient, err := mongodb.NewClient(context.Background(), cfgMongo.Host, cfgMongo.Port, cfgMongo.Username, cfgMongo.Password, cfgMongo.Database, cfgMongo.AuthDB)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//
+	//storage := db.NewStorage(mongoDBClient, cfg.MongoDB.Collection, logger)
 
 	logger.Info("create router handler")
 	handler := user.NewHandler(logger)
